@@ -1,0 +1,14 @@
+platform :ios, '11.0'
+use_frameworks!
+
+target 'Example' do
+  pod 'ValidModel', :path => '../'
+end
+
+post_install do |installer|
+	installer.pods_project.targets.each do |target|
+		target.build_configurations.each do |config|
+			config.build_settings['VALID_ARCHS'] = 'arm64'
+		end
+	end
+end
