@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'Example' do
   pod 'ValidModel', :path => '../'
+  #pod 'ValidModel', :git => 'https://github.com/reimpl/ValidModel.git'
 end
 
 post_install do |installer|

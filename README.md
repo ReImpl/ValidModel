@@ -10,7 +10,7 @@ In many cases projects are stuffed with 'mocks'. They provide good value
 however it comes with a price of extra development and maintanence that mock loading system
 and mock files require (source code that loads mock data, mock data files that are supposed to match model's format).
 
-In a nutshell ValidModel proposes a different workflow when working with application models and it boils down to an ideas of Validation.
+In a nutshell ValidModel proposes a different workflow when working with application models and it boils down to an idea of Validation.
 Assume having a model with clearly defined min-max range values for the properties of the model.
 By just knowing min-max limits information it is easy to:
   - confirm that given model instance contains correct values that application knows how to handle.
