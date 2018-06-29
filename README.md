@@ -47,16 +47,18 @@ Having described a contract it is easy to:
 
 Here is how it looks like in code:
 ```swift
-let mv = ModelValidator() // instantiate model validator once and reuse later.
+let validator = ModelValidator() // instantiate model validator once and reuse later.
 
 let user: User = ... // assuming instance exists, from API response and JSONDecod-ed into object.
 let contract = UserContract()
 
 // Validate model instance:
-let isValid = try? mv.validate(user, using: contract)
+let isValid = try? validator.validate(user, using: contract)
+
+let generator = ModelGenerator() // instantiate once and reuse later.
 
 // Generate new instance with 'random' values for testing purposes:
-let dummyUser: User = try? mv.model(from: contract, aggregate: .random)
+let dummyUser: User = try? generator.model(from: contract, aggregate: .random)
 ```
 
 ## Example
@@ -86,7 +88,7 @@ pod 'ValidModel/Extended'
 
 ## Author
 
-kernel, kernel@reimplement.mobi
+kernel, ReImpl.
 
 ## License
 

@@ -9,7 +9,9 @@
 import Foundation
 import Fakery
 
-public struct FirstNameValidator: PropertyValidator {
+// MARK: - FirstNameValidator
+
+public struct FirstNameValidator: GeneratedPropertyValidator {
 	
 	private let stringValidator = StringValidator(length: (min: 1, max: 30))
 	
@@ -29,7 +31,9 @@ public struct FirstNameValidator: PropertyValidator {
 	
 }
 
-public struct LastNameValidator: PropertyValidator {
+// MARK: - LastNameValidator
+
+public struct LastNameValidator: GeneratedPropertyValidator {
 	
 	private let stringValidator = StringValidator(length: (min: 1, max: 30))
 	
@@ -49,7 +53,9 @@ public struct LastNameValidator: PropertyValidator {
 	
 }
 
-public struct EmailValidator: PropertyValidator {
+// MARK: - EmailValidator
+
+public struct EmailValidator: GeneratedPropertyValidator {
 	
 	private let stringValidator = StringValidator(length: (min: 5, max: 256))
 	
@@ -61,8 +67,7 @@ public struct EmailValidator: PropertyValidator {
 	
 	public func validate(_ value: Any) -> Bool {
 		guard stringValidator.validate(value),
-			let s = value as? String,
-			s.utf8.count >= 5 else {
+			let s = value as? String else {
 				return false
 		}
 		
@@ -82,6 +87,28 @@ public struct EmailValidator: PropertyValidator {
 	
 	public func value(for af: ValidatorAggregateFunc) -> Any {
 		return faker.internet.email()
+	}
+	
+}
+
+// MARK: - CompanyNameValidator
+
+public struct CompanyNameValidator: GeneratedPropertyValidator {
+	
+	private let stringValidator = StringValidator(length: (min: 3, max: 64))
+	
+	public init() { }
+	
+	public var rangeDescription: String {
+		return "Company name of length: \(stringValidator.minLength) - \(stringValidator.maxLength)"
+	}
+	
+	public func validate(_ value: Any) -> Bool {
+		return stringValidator.validate(value)
+	}
+	
+	public func value(for af: ValidatorAggregateFunc) -> Any {
+		return faker.company.name()
 	}
 	
 }

@@ -14,16 +14,22 @@ public enum ValidatorAggregateFunc {
 	case random
 }
 
-public protocol PropertyValidator {
+public protocol PropertyValueGenerator {
 	
-	var rangeDescription: String { get }
-	
-	func validate(_ value: Any) -> Bool
 	func value(for af: ValidatorAggregateFunc) -> Any
 	
 }
 
-public struct StringValidator: PropertyValidator {
+public protocol GeneratedPropertyValidator: PropertyValueGenerator {
+	
+	var rangeDescription: String { get }
+	func validate(_ value: Any) -> Bool
+	
+}
+
+// MARK: - StringValidator
+
+public struct StringValidator: GeneratedPropertyValidator {
 	
 	public typealias LimitType = UInt
 	
@@ -54,6 +60,8 @@ public struct StringValidator: PropertyValidator {
 		return length >= minLength && length <= maxLength
 	}
 	
+	// MARK: PropertyValueGenerator
+	
 	public func value(for af: ValidatorAggregateFunc) -> Any {
 		let result: String
 		
@@ -71,7 +79,7 @@ public struct StringValidator: PropertyValidator {
 		return result
 	}
 	
-	// MARK: - Internal
+	// MARK: Internal
 	
 	func randomString(of length: LimitType) -> String {
 		let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -87,7 +95,9 @@ public struct StringValidator: PropertyValidator {
 	
 }
 
-public struct IntValidator: PropertyValidator {
+// MARK: - IntValidator
+
+public struct IntValidator: GeneratedPropertyValidator {
 	
 	public typealias ValueType = Int
 	
@@ -113,6 +123,8 @@ public struct IntValidator: PropertyValidator {
 		return number >= minValue && number <= maxValue
 	}
 	
+	// MARK: PropertyValueGenerator
+	
 	public func value(for af: ValidatorAggregateFunc) -> Any {
 		let result: ValueType
 		
@@ -130,7 +142,9 @@ public struct IntValidator: PropertyValidator {
 	
 }
 
-public struct DoubleValidator: PropertyValidator {
+// MARK: - DoubleValidator
+
+public struct DoubleValidator: GeneratedPropertyValidator {
 	
 	public typealias ValueType = Double
 	
@@ -156,6 +170,8 @@ public struct DoubleValidator: PropertyValidator {
 		return number >= minValue && number <= maxValue
 	}
 	
+	// MARK: PropertyValueGenerator
+	
 	public func value(for af: ValidatorAggregateFunc) -> Any {
 		let result: ValueType
 		
@@ -173,8 +189,69 @@ public struct DoubleValidator: PropertyValidator {
 	
 }
 
-// TODO: - Add ArrayValidator (enforces number of elements to a specific range)
-// TODO: - Add DictionaryValidator
+// MARK: - ArrayValidator
+
+/// Enforces number of elements to a specific range.
+public struct ArrayValidator<MC: ModelContract>: GeneratedPropertyValidator {
+	
+	public let minCapacity: Int
+	public let maxCapacity: Int
+	
+	private let contract: MC
+	
+	public init(capacity v: (min: Int, max: Int) = (min: 0, max: 100), contract: MC) {
+		assert(v.min <= v.max)
+		
+		minCapacity = v.min
+		maxCapacity = v.max
+		
+		self.contract = contract
+	}
+	
+	public var rangeDescription: String {
+		return "Array containing [\(minCapacity)-\(maxCapacity)] elements."
+	}
+	
+	public func validate(_ value: Any) -> Bool {
+		guard let arr = value as? Array<MC.M> else {
+			return false
+		}
+		
+		return arr.count >= minCapacity && arr.count <= maxCapacity
+	}
+	
+	// MARK: PropertyValueGenerator
+	
+	public func value(for af: ValidatorAggregateFunc) -> Any {
+//		let result: ValueType
+		let n: Int
+
+		switch af {
+		case .min:
+			n = minCapacity
+		case .max:
+			n = maxCapacity
+		case .random:
+			n = randomNumber(between: minCapacity, and: maxCapacity)
+		}
+		
+		return generateObjects(count: n, aggr: af)
+	}
+	
+	private func generateObjects(count n: Int, aggr af: ValidatorAggregateFunc) -> [ModelGenerator.JsonDict] {
+		let mg = ModelGenerator()
+		
+		var items: [ModelGenerator.JsonDict] = []
+		items.reserveCapacity(n)
+		
+		for _ in 0..<n {
+			items.append(mg.dict(from: contract, aggregate: af))
+		}
+		
+		return items
+	}
+	
+}
 
 // MARK: -
 

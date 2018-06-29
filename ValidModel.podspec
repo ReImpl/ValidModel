@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ValidModel'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
 
   s.platform     = :ios, '8.0'
   s.ios.deployment_target = '8.0'
@@ -42,14 +42,7 @@ It provides a programming model that can:
   end
 
 
-  s.swift_version = '4.1'
+  s.swift_version = '4.2'
   s.requires_arc = true
-  
-  # s.resource_bundles = {
-  #   'ValidModel' => ['ValidModel/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
   
 end
