@@ -83,14 +83,10 @@ public struct StringValidator: GeneratedPropertyValidator {
 	
 	func randomString(of length: LimitType) -> String {
 		let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		let lettersLength = UInt32(letters.count)
 		
-		return (0..<length).map { i -> String in
-			let offset = Int(arc4random_uniform(lettersLength))
-			
-			let index = letters.index(letters.startIndex, offsetBy: offset)
-			return String(letters[index])
-		}.joined()
+		return String((0..<length).map { _ -> Character in
+			return letters.randomElement()!
+		})
 	}
 	
 }
@@ -181,7 +177,7 @@ public struct DoubleValidator: GeneratedPropertyValidator {
 		case .max:
 			result = maxValue
 		case .random:
-			result = drand48()
+			result = ValueType.random(in: minValue...maxValue)
 		}
 		
 		return result
@@ -253,6 +249,52 @@ public struct ArrayValidator<MC: ModelContract>: GeneratedPropertyValidator {
 	
 }
 
+public protocol EnumRepresentable: CaseIterable, RawRepresentable, Decodable { }
+
+// MARK: - EnumValidator
+
+/// EnumValidator works with 'simple' enums that has no associated values.
+///
+/// Note: https://oleb.net/blog/2018/06/enumerating-enum-cases/
+public struct EnumValidator<E: EnumRepresentable>: GeneratedPropertyValidator {
+	
+	private let contract: E.Type
+	
+	public init(enumType: E.Type) {
+		contract = enumType
+	}
+	
+	public var rangeDescription: String {
+		return "Enum."
+	}
+	
+	public func validate(_ value: Any) -> Bool {
+		return value is E
+	}
+	
+	// MARK: PropertyValueGenerator
+	
+	public func value(for af: ValidatorAggregateFunc) -> Any {
+		let result: E
+		
+//		let cases = contract.allCases.map {"\($0)"}.sorted()
+		let cases = contract.allCases
+		assert(cases.count > 0)
+		
+//		switch af {
+//		case .min:
+//			result = cases.first!
+//		case .max:
+//			result = cases.reversed().first!
+//		case .random:
+			result = contract.allCases.randomElement()!
+//		}
+	
+		return result.rawValue
+	}
+	
+}
+
 // MARK: -
 
 fileprivate func randomNumber(between min: Int, and max: Int) -> Int {
@@ -260,6 +302,6 @@ fileprivate func randomNumber(between min: Int, and max: Int) -> Int {
 		return max
 	}
 	
-	return Int(arc4random_uniform(UInt32(max - min)) + UInt32(min))
+	return Int.random(in: min...max)
 }
 

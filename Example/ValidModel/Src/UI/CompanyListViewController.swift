@@ -38,13 +38,18 @@ final class CompanyListViewController: UITableViewController {
 		loadTestItems()
 	}
 	
-	var companies: [Company] = []
+	private let sectionTitles: [String] = {
+		Product.allCases.map { $0.rawValue }.sorted()
+	}()
+	private var sectionCompanies: GroupedCompanyMap = [:]
+	
+	typealias GroupedCompanyMap = [String: [Company]]
 	
 	private func loadTestItems() {
 		let generator = ModelGenerator()
 		let contract = CompanyContract()
 		
-		companies = (0...20).map { _ -> Company in
+		let companies = (0...20).map { _ -> Company in
 			var company: Company!
 			do {
 				company = try generator.model(from: contract, aggregate: .random)
@@ -52,13 +57,46 @@ final class CompanyListViewController: UITableViewController {
 				assertionFailure("\(error)")
 			}
 			return company
-			}.sorted()
+			}
+		
+		let groupedCompanies: GroupedCompanyMap = companies.reduce([:]) { resultMap, next in
+			let name = next.productType.rawValue
+			
+			let companies: [Company]
+			if let existing = resultMap[name] {
+				companies = existing + [next]
+			} else {
+				companies = [next]
+			}
+			
+			var results = resultMap
+			results[name] = companies
+			
+			return results
+		}
+		
+		var sortedCompanies: GroupedCompanyMap = [:]
+		for (key, val) in groupedCompanies {
+			sortedCompanies[key] = val.sorted()
+		}
+		
+		sectionCompanies = sortedCompanies
 	}
 	
 	// MARK: UITableViewDataSource
 	
+	override func numberOfSections(in tableView: UITableView) -> Int {
+		return sectionTitles.count
+	}
+	
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		return sectionTitles[section].capitalized
+	}
+	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return companies.count
+		let title = sectionTitles[section]
+		
+		return sectionCompanies[title]?.count ?? 0
 	}
 	
 	private enum Cells: String {
@@ -66,11 +104,19 @@ final class CompanyListViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let title = sectionTitles[indexPath.section]
+		
+		guard let company = sectionCompanies[title]?[indexPath.row] else {
+			assertionFailure("Data processed incorrectly")
+			
+			return UITableViewCell()
+		}
+		
 		let identifier = Cells.companyCell.rawValue
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! CompanyCell
 		
-		cell.loadCompany(companies[indexPath.row])
+		cell.loadCompany(company)
 		
 		return cell
 	}

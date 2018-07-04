@@ -12,17 +12,21 @@ import ValidModel
 class UserListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	var company: Company!
-
+	
+	private var users: [User] = []
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		assert(company != nil, "'company' must be set by presenting view ctrl.")
+		
+		users = company.users.sorted()
     }
 	
 	// MARK: UITableViewDataSource
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return company.users.count
+		return users.count
 	}
 	
 	private enum Cells: String {
@@ -34,7 +38,7 @@ class UserListViewController: UIViewController, UITableViewDataSource, UITableVi
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! UserCell
 		
-		cell.loadUser(company.users[indexPath.row])
+		cell.loadUser(users[indexPath.row])
 		
 		return cell
 	}
