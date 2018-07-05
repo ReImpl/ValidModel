@@ -33,13 +33,13 @@ final public class ModelValidator {
 			}
 			
 			guard validator.validate(value) else {
-				assertionFailure("""
+				print("""
 					Failed to validate model '\(String(describing: MC.M.self))'.
 					Property '\(propertyName)' value out of valid bounds. Value: \(value).
 					Validator range: \(validator.rangeDescription).
 					""")
 				
-				return false
+				throw ValidationError.propertyValueNotValid(propertyName)
 			}
 		}
 		
@@ -50,6 +50,7 @@ final public class ModelValidator {
 	
 	public enum ValidationError: Error {
 		case emptyValueNotAllowed(String)
+		case propertyValueNotValid(String)
 	}
 	
 }
