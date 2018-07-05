@@ -35,7 +35,10 @@ final class CompanyListViewController: UITableViewController {
 		
 		title = "Companies"
 		
-		loadTestItems()
+		sectionCompanies = generateTestItems()
+		
+		let valid = validateCompanies(sectionCompanies)
+		assert(valid)
 	}
 	
 	private let sectionTitles: [String] = {
@@ -45,7 +48,7 @@ final class CompanyListViewController: UITableViewController {
 	
 	typealias GroupedCompanyMap = [String: [Company]]
 	
-	private func loadTestItems() {
+	private func generateTestItems() -> GroupedCompanyMap {
 		let generator = ModelGenerator()
 		let contract = CompanyContract()
 		
@@ -57,7 +60,7 @@ final class CompanyListViewController: UITableViewController {
 				assertionFailure("\(error)")
 			}
 			return company
-			}
+		}
 		
 		let groupedCompanies: GroupedCompanyMap = companies.reduce([:]) { resultMap, next in
 			let name = next.productType.rawValue
@@ -80,7 +83,26 @@ final class CompanyListViewController: UITableViewController {
 			sortedCompanies[key] = val.sorted()
 		}
 		
-		sectionCompanies = sortedCompanies
+		return sortedCompanies
+	}
+	
+	private func validateCompanies(_ items: GroupedCompanyMap) -> Bool {
+		let validator = ModelValidator()
+		let contract = CompanyContract()
+		
+		for companies in items.values {
+			for c in companies {
+				do {
+					guard try validator.validate(c, using: contract) else {
+						return false
+					}
+				} catch {
+					return false
+				}
+			}
+		}
+		
+		return true
 	}
 	
 	// MARK: UITableViewDataSource

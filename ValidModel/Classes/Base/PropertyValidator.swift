@@ -213,13 +213,23 @@ public struct ArrayValidator<MC: ModelContract>: GeneratedPropertyValidator {
 			return false
 		}
 		
+		let validator = ModelValidator()
+		for item in arr {
+			do {
+				guard try validator.validate(item, using: contract) else {
+					return false
+				}
+			} catch {
+				return false
+			}
+		}
+		
 		return arr.count >= minCapacity && arr.count <= maxCapacity
 	}
 	
 	// MARK: PropertyValueGenerator
 	
 	public func value(for af: ValidatorAggregateFunc) -> Any {
-//		let result: ValueType
 		let n: Int
 
 		switch af {

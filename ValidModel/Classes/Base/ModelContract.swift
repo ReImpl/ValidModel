@@ -21,7 +21,7 @@ final public class ModelValidator {
 	
 	public init() { }
 	
-	public func validate<MC: ModelContract>(_ model: MC.M, using contract: MC.Type) throws -> Bool {
+	public func validate<MC: ModelContract>(_ model: MC.M, using contract: MC) throws -> Bool {
 		let properties = mirrorProperties(for: contract)
 		
 		for (propertyName, policy) in properties {
