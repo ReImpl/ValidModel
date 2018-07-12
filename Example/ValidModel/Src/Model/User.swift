@@ -18,6 +18,7 @@ struct UserContract: ModelContract {
 	let email: P = (\M.email, EmailValidator())
 	
 	let rank: P = (\M.rank, IntValidator(inRange: (min: 1, max: 100)))
+	let hiredDate: P = (\M.hiredDate, DateValidator(inRange: (min: fiveYearsAgo, max: Date())))
 	
 }
 
@@ -28,6 +29,7 @@ struct User: Decodable {
 	let email: String
 	
 	let rank: Int
+	let hiredDate: Date
 	
 }
 
@@ -42,3 +44,5 @@ extension User: Comparable {
 	}
 	
 }
+
+fileprivate let fiveYearsAgo = Date(timeIntervalSinceNow: -5 * 365 * 24 * 3600)

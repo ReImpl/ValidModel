@@ -185,6 +185,56 @@ public struct DoubleValidator: GeneratedPropertyValidator {
 	
 }
 
+// MARK: - DateValidator
+
+public struct DateValidator: GeneratedPropertyValidator {
+	
+	public typealias ValueType = Date
+	
+	public let minValue: ValueType
+	public let maxValue: ValueType
+	
+	public init(inRange v: (min: Date, max: Date) = (min: Date(), max: .distantFuture)) {
+		assert(v.min <= v.max)
+		
+		minValue = v.min
+		maxValue = v.max
+	}
+	
+	public var rangeDescription: String {
+		return "Date value in between: \(minValue) - \(maxValue)"
+	}
+	
+	public func validate(_ value: Any) -> Bool {
+		guard let number = value as? ValueType else {
+			return false
+		}
+		
+		return number >= minValue && number <= maxValue
+	}
+	
+	// MARK: PropertyValueGenerator
+	
+	public func value(for af: ValidatorAggregateFunc) -> Any {
+		let result: ValueType
+		
+		switch af {
+		case .min:
+			result = minValue
+		case .max:
+			result = maxValue
+		case .random:
+			let period = maxValue.timeIntervalSince(minValue)
+			let interval = TimeInterval.random(in: 0...period)
+			
+			result = minValue.addingTimeInterval(interval)
+		}
+		
+		return result.timeIntervalSinceReferenceDate
+	}
+	
+}
+
 // MARK: - ArrayValidator
 
 /// Enforces number of elements to a specific range.

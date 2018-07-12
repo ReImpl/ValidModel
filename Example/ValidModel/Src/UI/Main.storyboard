@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="IMe-zW-ac6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="IMe-zW-ac6">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -102,28 +102,38 @@
                                                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbf-rc-Nq7" userLabel="Rank Label">
-                                                    <rect key="frame" x="15" y="70.333333333333329" width="313" height="62.666666666666671"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Hired: &lt;date&gt;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnb-lG-erS" userLabel="Hired Label">
+                                                    <rect key="frame" x="15" y="70.333333333333329" width="72.666666666666671" height="62.666666666666671"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Rank: &lt;N&gt;" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbf-rc-Nq7" userLabel="Rank Label">
+                                                    <rect key="frame" x="92.666666666666671" y="70.333333333333329" width="235.33333333333331" height="62.666666666666671"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="pnb-lG-erS" secondAttribute="bottom" id="92X-Sd-rcc"/>
+                                                <constraint firstItem="Wbf-rc-Nq7" firstAttribute="leading" secondItem="pnb-lG-erS" secondAttribute="trailing" constant="5" id="AvX-9j-DHd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="Wbf-rc-Nq7" secondAttribute="trailing" id="LgK-Lq-Mpa"/>
                                                 <constraint firstItem="qVc-up-cYQ" firstAttribute="leading" secondItem="OJa-yX-Mpy" secondAttribute="leadingMargin" id="PmL-YI-KN4"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="Wbf-rc-Nq7" secondAttribute="bottom" id="YEv-eX-3H4"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="qVc-up-cYQ" secondAttribute="trailing" id="cdK-SD-c4r"/>
                                                 <constraint firstItem="qVc-up-cYQ" firstAttribute="top" secondItem="AsA-9h-8ia" secondAttribute="bottom" id="dg2-rc-v2U"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="AsA-9h-8ia" secondAttribute="trailing" id="fqV-5z-k1m"/>
-                                                <constraint firstItem="Wbf-rc-Nq7" firstAttribute="leading" secondItem="OJa-yX-Mpy" secondAttribute="leadingMargin" id="qaB-Sf-nfJ"/>
+                                                <constraint firstItem="pnb-lG-erS" firstAttribute="leading" secondItem="OJa-yX-Mpy" secondAttribute="leadingMargin" id="hIj-bE-XEY"/>
                                                 <constraint firstItem="Wbf-rc-Nq7" firstAttribute="top" secondItem="qVc-up-cYQ" secondAttribute="bottom" id="rUd-Ic-Wnh"/>
                                                 <constraint firstItem="AsA-9h-8ia" firstAttribute="leading" secondItem="OJa-yX-Mpy" secondAttribute="leadingMargin" id="siA-F2-hIa"/>
                                                 <constraint firstItem="AsA-9h-8ia" firstAttribute="top" secondItem="OJa-yX-Mpy" secondAttribute="topMargin" constant="10" id="txb-Rg-c3Q"/>
+                                                <constraint firstItem="pnb-lG-erS" firstAttribute="top" secondItem="qVc-up-cYQ" secondAttribute="bottom" id="yxe-hx-Lsm"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="emailLabel" destination="qVc-up-cYQ" id="XHD-g6-4iV"/>
+                                            <outlet property="hiredLabel" destination="pnb-lG-erS" id="Vhn-eg-cMZ"/>
                                             <outlet property="nameLabel" destination="AsA-9h-8ia" id="lJI-Kx-hBq"/>
                                             <outlet property="rankLabel" destination="Wbf-rc-Nq7" id="2qt-OX-6nZ"/>
                                         </connections>

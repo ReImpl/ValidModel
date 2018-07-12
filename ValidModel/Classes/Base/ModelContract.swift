@@ -24,6 +24,9 @@ final public class ModelValidator {
 	public func validate<MC: ModelContract>(_ model: MC.M, using contract: MC) throws -> Bool {
 		let properties = mirrorProperties(for: contract)
 		
+		// TODO: validate property list in the model against property list in the contract
+		// and report differencies.
+		
 		for (propertyName, policy) in properties {
 			let keyPath = policy.0
 			let validator = policy.1
